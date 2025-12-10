@@ -11,3 +11,6 @@ wheels/
 
 # Mac OS specific
 .DS_Store
+
+# Project specific data
+data
