@@ -51,7 +51,7 @@ def stem_word(token: str) -> str:
     stemmer("english")
     return stemmer.stemWord(token)
 
-def prepare_for_index(text: str) -> list[str]:
+def prepare_for_index(text: str, languages) -> list[str]:
     normalized = normalize_text(text)
     tokens = tokenize(normalized)
     tokens = filter_tokens(tokens)
