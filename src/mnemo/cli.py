@@ -50,6 +50,28 @@ def init():
     # (*) Cancel
     # ( ) Rebuild index (keep config)
     # ( ) Re-initialize (overwrite config and index)
+    project_root = Path.cwd()
+    mnemo_dir = project_root / ".mnemo"
+
+    if mnemo_dir.exists():
+        action = questionary.select(
+            ".mnemo directory already exists. What do you want to do?",
+            choices=[
+                questionary.Choice("Cnacel", value="cancel"),
+                questionary.Choice("Rebuild index (keep config)", value="rebuild"),
+                questionary.Choice("Re-initialize (overwrite config and index)", value="reinit"),
+            ],
+        ).ask()
+
+    if action is None or action == "cancel":
+        typer.echo("Cancelled.")
+        raise typer.Exit(code=0)
+    if action == "rebuild":
+        rebuild_index()
+        raise typer.Exit(code=0)
+    if action == "reinit":
+        import shutil
+        shutil.rmtree(mnemo_dir)
 
     typer.echo("Initialising mnemo")
 
