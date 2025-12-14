@@ -1,33 +1,12 @@
-from datetime import datetime, timezone
-import json
+from datetime import datetime
 from pathlib import Path
 
 from mnemo.enums import Language, Source
 from mnemo.sources import SOURCES
+from mnemo.utils.config import load_config, save_config
 from mnemo.utils.storage import load_pickle, save_pickle, find_project_root
 from mnemo.utils.text import prepare_for_index
 from mnemo.indexer import build_index, search_index
-
-
-
-def save_config(
-        project_root: Path,
-        *,
-        sources: set[Source],
-        languages: set[Language],
-        ) -> None:
-    mnemo_dir = project_root / ".mnemo"
-
-    config = {
-        "sources": [s.value for s in sources],
-        "languages": [l.value for l in languages],
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "last_indexed_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    with open(mnemo_dir / "config.json", "w", encoding="utf-8") as f:
-        json.dump(config, f, indent=2)
-
 
 
 
@@ -82,12 +61,13 @@ def rebuild_index():
 
 def search_notes(query: str):
     project_root = find_project_root()
+    config = load_config(project_root)
     data_dir = project_root / ".mnemo" / "data"
 
     index = load_pickle(data_dir / "index.pkl")
     notes = load_pickle(data_dir / "notes.pkl")
 
-    results = search_index(query, index, notes)
+    results = search_index(query=query, index=index, notes=notes, languages=config["languages"])
     return results
 
 def init_mnemo(sources: set[Source], languages: set[Language]) -> None:

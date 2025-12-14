@@ -5,7 +5,7 @@ def build_index(notes):
     return notes
 
 
-def search_index(query, index, notes):
+def search_index(*, query, index, notes, languages):
     # TODO: implement search index
 
     return "TBD"
