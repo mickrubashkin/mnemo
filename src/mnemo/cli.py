@@ -26,6 +26,13 @@ def search(query: str):
 
 @app.command()
 def init():
+    # TODO: add check .mnemo
+    # .mnemo directory already exists.
+    # What do you want to do?
+    # (*) Cancel
+    # ( ) Rebuild index (keep config)
+    # ( ) Re-initialize (overwrite config and index)
+
     typer.echo("Initialising mnemo")
 
     source_choices = []

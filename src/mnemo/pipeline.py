@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timezone
+import json
 from pathlib import Path
 
 from mnemo.enums import Language, Source
@@ -6,6 +7,28 @@ from mnemo.sources import SOURCES
 from mnemo.utils.storage import load_pickle, save_pickle, find_project_root
 from mnemo.utils.text import prepare_for_index
 from mnemo.indexer import build_index, search_index
+
+
+
+def save_config(
+        project_root: Path,
+        *,
+        sources: set[Source],
+        languages: set[Language],
+        ) -> None:
+    mnemo_dir = project_root / ".mnemo"
+
+    config = {
+        "sources": [s.value for s in sources],
+        "languages": [l.value for l in languages],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "last_indexed_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    with open(mnemo_dir / "config.json", "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2)
+
+
 
 
 def export_all_notes(sources: set[Source]) -> list:
@@ -68,11 +91,23 @@ def search_notes(query: str):
     return results
 
 def init_mnemo(sources: set[Source], languages: set[Language]) -> None:
-    project_root = Path.cwd()
-    mnemo_dir = project_root / ".mnemo"
-    data_dir = mnemo_dir / "data"
+    mnemo_dir = Path.cwd() / ".mnemo"
 
-    data_dir.mkdir(parents=True, exist_ok=True)
+    if mnemo_dir.exists():
+        raise RuntimeError(
+            "mnemo project already initialized. "
+            "Use `mnemo rebuild` or delete .mnemo directory."
+        )
+
+    mnemo_dir.mkdir()
+    data_dir = mnemo_dir / "data"
+    data_dir.mkdir()
+
+    save_config(
+        Path.cwd(),
+        sources=sources,
+        languages=languages,
+    )
 
     notes = export_all_notes(sources)
 
