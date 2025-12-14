@@ -3,12 +3,16 @@ import pickle
 
 
 def save_pickle(data, path):
-
+    path = Path(path)
     with open(path, 'wb') as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 def load_pickle(path):
-    pass
+    path = Path(path)
+    if not path.exists():
+        raise RuntimeError(f"Pickle file not found: {path}")
+    with open(path, "rb") as f:
+        return pickle.load(f)
 
 
 def find_project_root(start: Path | None = None) -> Path:

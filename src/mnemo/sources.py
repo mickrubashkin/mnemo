@@ -2,6 +2,8 @@ import json
 import subprocess
 from pathlib import Path
 
+from mnemo.enums import Source
+
 
 def export_apple_notes():
     print("Running apple notes export...")
@@ -27,8 +29,21 @@ def export_apple_notes():
 
     return notes
 
+
+
 def export_bear_notes():
-    pass
+    notes = []
+    return notes
+
+
+
+def export_notes(source: Source) -> list[dict]:
+    if source is Source.APPLE:
+        return export_apple_notes()
+    if source is Source.BEAR:
+        return export_bear_notes()
+
+    raise ValueError(f"Unsupported source: {souces}")
 
 SOURCES = {
     'apple': export_apple_notes,

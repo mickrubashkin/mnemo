@@ -2,6 +2,7 @@ import os
 import typer
 import questionary
 from pathlib import Path
+from mnemo import pipeline
 from mnemo.enums import Language, Source
 from mnemo.pipeline import init_mnemo, rebuild_index, search_notes
 
@@ -22,6 +23,23 @@ def rebuild():
 @app.command()
 def search(query: str):
     search_notes(query)
+
+
+@app.command()
+def stats():
+    stats = pipeline.stats()
+    typer.echo("mnemo project")
+    typer.echo("-------------")
+    typer.echo(f"Path: {stats["project_root"]}")
+    typer.echo("")
+    typer.echo(f"Sources: {', '.join(stats['sources'])}")
+    typer.echo(f"Languages: {', '.join(stats['languages'])}")
+    typer.echo("")
+    typer.echo(f"Created:       {stats['created_at']}")
+    typer.echo(f"Last indexed:  {stats['last_indexex_at']}")
+    typer.echo("")
+    typer.echo(f"Notes indexed: {stats['notes_count']}")
+    typer.echo(f"Index tokens:  {stats['tokens_count']}")
 
 
 @app.command()
