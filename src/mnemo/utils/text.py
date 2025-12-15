@@ -59,20 +59,23 @@ def stem_word(token: str, *, lang: Language = Language.EN) -> str:
 def prepare_for_index(text: str, languages: set[Language]) -> list[tuple[str, int]]:
     normalized = normalize_text(text)
     base_tokens = tokenize(normalized)
-    result = []
-    seen = set()
+    result: list[tuple[str, int]] = []
+    seen: set[tuple[str, int]] = set()
 
     for pos, raw_token in enumerate(base_tokens):
         for lang in languages:
             if raw_token in BLACK_LIST[lang]:
                 continue
+
             if raw_token in WHITE_LIST:
-                if (raw_token, pos) not in seen:
-                    seen.add((raw_token, pos))
-                    result.append((raw_token, pos))
-                continue
-            stem = stem_word(raw_token, lang=lang)
-            result.append((stem, pos))
+                key = (raw_token, pos)
+            else:
+                stem = stem_word(raw_token, lang=lang)
+                key = (stem, pos)
+
+            if key not in seen:
+                seen.add(key)
+                result.append(key)
 
     return result
 
