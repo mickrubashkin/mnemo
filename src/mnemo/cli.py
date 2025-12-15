@@ -16,7 +16,12 @@ def root():
 
 @app.command()
 def rebuild():
+    """
+    Rebuild search index using existing mnemo configuration.
+    """
+    typer.echo("Rebuilding mnemo index...")
     rebuild_index()
+    typer.echo("Rebuild finished")
 
 
 @app.command()
@@ -36,7 +41,7 @@ def stats():
     stats = get_stats()
     typer.echo("mnemo project")
     typer.echo("-------------")
-    typer.echo(f"Path: {stats["project_root"]}")
+    typer.echo(f"Path: {stats['project_root']}")
     typer.echo("")
     typer.echo(f"Sources: {', '.join(stats['sources'])}")
     typer.echo(f"Languages: {', '.join(stats['languages'])}")
@@ -50,12 +55,6 @@ def stats():
 
 @app.command()
 def init():
-    # TODO: add check .mnemo
-    # .mnemo directory already exists.
-    # What do you want to do?
-    # (*) Cancel
-    # ( ) Rebuild index (keep config)
-    # ( ) Re-initialize (overwrite config and index)
     project_root = Path.cwd()
     mnemo_dir = project_root / ".mnemo"
 
@@ -122,3 +121,14 @@ def init():
     selected_languages = {Language(code) for code in note_languages}
 
     init_mnemo(selected_sources, selected_languages)
+
+    # TODO: add progress bar while loading notes
+    # TODO: add export status (export -> tokenize -> index -> save)
+    # TODO: add brief report after finish
+    """
+    Indexed 81 notes
+    Sources: apple, bear
+    Languages: en, es, ru
+    Unique tokens: 23,987
+    Time: 16.7s
+    """

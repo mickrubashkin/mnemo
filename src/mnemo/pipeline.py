@@ -48,16 +48,26 @@ def process_notes(notes: list, languages: set[Language]) -> list:
 
 
 
-def rebuild_index():
-    # TODO: use sources, remove hardcoded values
-    # notes = export_all_notes(Source.values())
-    # processed_notes = process_notes(notes)
+def rebuild_index() -> None:
+    project_root = find_project_root()
+    config = load_config(project_root)
+    mnemo_dir = project_root / ".mnemo"
+    data_dir = mnemo_dir / "data"
 
-    # # TODO: fix hardcoded pathes
-    # save_pickle(processed_notes, './data/notes.pkl')
-    # index = build_index(processed_notes)
-    # save_pickle(index, './data/index.pkl')
-    pass
+    if not mnemo_dir.exists():
+        raise RuntimeError(
+            "mnemo project is not initialized. "
+            "Run `mnemo init` first."
+        )
+
+    notes = export_all_notes(config["sources"])
+    processed_notes = process_notes(notes, config["languages"])
+    save_pickle(processed_notes, data_dir / "notes.pkl")
+    save_config(
+        project_root,
+        sources=config["sources"],
+        languages=config["languages"]
+    )
 
 
 
