@@ -70,12 +70,18 @@ def search_notes(query: str):
     notes = load_pickle(data_dir / "notes.pkl")
     notes_by_id = {note["id"]: note for note in notes}
 
-    results = search_index(query=query, index=index, notes=notes_by_id, languages=config["languages"])
+    results = search_index(
+        query=query,
+        index=index,
+        notes=notes_by_id,
+        languages=config["languages"]
+        )
+
     return results
 
 
 
-def stats():
+def get_stats():
     project_root = find_project_root()
     config = load_config(project_root)
     data_dir = project_root / ".mnemo" / "data"
@@ -89,11 +95,10 @@ def stats():
         "created_at": config["created_at"],
         "last_indexed_at": config["last_indexed_at"],
         "notes_count": len(notes),
-        "tokens_count": len(index),
+        "unique_tokens": len(index),
     }
 
     return stats
-
 
 
 
