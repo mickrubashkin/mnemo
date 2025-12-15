@@ -68,8 +68,9 @@ def search_notes(query: str):
 
     index = load_pickle(data_dir / "index.pkl")
     notes = load_pickle(data_dir / "notes.pkl")
+    notes_by_id = {note["id"]: note for note in notes}
 
-    results = search_index(query=query, index=index, notes=notes, languages=config["languages"])
+    results = search_index(query=query, index=index, notes=notes_by_id, languages=config["languages"])
     return results
 
 

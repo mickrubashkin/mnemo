@@ -55,6 +55,7 @@ def stem_word(token: str, *, lang: Language = Language.EN) -> str:
         return token
     return stemmer.stemWord(token)
 
+
 def prepare_for_index(text: str, languages: set[Language]) -> list[tuple[str, int]]:
     normalized = normalize_text(text)
     base_tokens = tokenize(normalized)
@@ -67,3 +68,22 @@ def prepare_for_index(text: str, languages: set[Language]) -> list[tuple[str, in
             all_tokens.append((token, pos))
 
     return all_tokens
+
+
+def prepare_for_search(query: str, languages: set[Language]) -> list:
+    normalized = normalize_text(query)
+    base_tokens = tokenize(normalized)
+
+    result = []
+    seen = set()
+
+    for lang in languages:
+        filtered = filter_tokens(base_tokens, lang=lang)
+        stemmed = [stem_word(t, lang=lang) for t in filtered]
+
+        for token in stemmed:
+            if token not in seen:
+                seen.add(token)
+                result.append(token)
+
+    return result
