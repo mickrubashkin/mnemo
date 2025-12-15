@@ -13,10 +13,19 @@ def save_config(
         ) -> None:
     mnemo_dir = project_root / ".mnemo"
 
+    config_path = mnemo_dir / "config.json"
+    created_at = datetime.now(timezone.utc).isoformat()
+    if config_path.exists():
+        with open(config_path, "r", encoding="utf-8") as f:
+            try:
+                created_at = json.load(f).get("created_at", created_at)
+            except Exception:
+                pass
+
     config = {
         "sources": [s.value for s in sources],
         "languages": [l.value for l in languages],
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": created_at,
         "last_indexed_at": datetime.now(timezone.utc).isoformat(),
     }
 
