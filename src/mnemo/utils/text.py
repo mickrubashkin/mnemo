@@ -59,15 +59,19 @@ def stem_word(token: str, *, lang: Language = Language.EN) -> str:
 def prepare_for_index(text: str, languages: set[Language]) -> list[tuple[str, int]]:
     normalized = normalize_text(text)
     base_tokens = tokenize(normalized)
-    all_tokens = []
+    result = []
 
-    for lang in languages:
-        filtered = filter_tokens(base_tokens, lang=lang)
-        stemmed = [stem_word(t, lang=lang) for t in filtered]
-        for pos, token in enumerate(stemmed):
-            all_tokens.append((token, pos))
+    for pos, raw_token in enumerate(base_tokens):
+        for lang in languages:
+            if raw_token in BLACK_LIST[lang]:
+                continue
+            if raw_token in WHITE_LIST:
+                result.append((raw_token, pos))
+                continue
+            stem = stem_word(raw_token, lang=lang)
+            result.append((stem, pos))
 
-    return all_tokens
+    return result
 
 
 def prepare_for_search(query: str, languages: set[Language]) -> list:
