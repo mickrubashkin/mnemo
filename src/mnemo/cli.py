@@ -1,3 +1,4 @@
+from typing import List
 import typer
 import questionary
 from pathlib import Path
@@ -19,10 +20,15 @@ def rebuild():
 
 
 @app.command()
-def search(query: str):
-    notes = search_notes(query)
-    for note in notes:
-        typer.echo(note["title"])
+def search(query: List[str]):
+    query_text = " ".join(query)
+    results = search_notes(query_text)
+
+    typer.echo(f"Found {len(results)} notes")
+    for result in results[:10]:
+        note = result["note"]
+        score = result["score"]
+        typer.echo(f"{score} | {note['title']}")
 
 
 @app.command()
