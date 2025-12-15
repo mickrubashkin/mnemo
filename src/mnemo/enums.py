@@ -2,13 +2,17 @@ from enum import Enum
 
 
 class Language(Enum):
-    EN = ("en", "English")
-    ES = ("es", "Spanish")
-    RU = ("ru", "Russian")
+    EN = "en"
+    ES = "es"
+    RU = "ru"
 
-    def __init__(self, code: str, label: str):
-        self.code = code
-        self.label = label
+    @property
+    def label(self) -> str:
+        return {
+            "en": "English",
+            "es": "Spanish",
+            "ru": "Russian"
+        }[self.value]
 
     @classmethod
     def values(cls) -> list[str]:
