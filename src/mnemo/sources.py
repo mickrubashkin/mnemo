@@ -5,6 +5,33 @@ from pathlib import Path
 from mnemo.enums import Source
 
 
+
+def open_apple_note(note_id: str) -> None:
+    script = f'''
+    tell application "Notes"
+        activate
+        show note id "{note_id}"
+    end tell
+    '''
+    subprocess.run(
+        ["osascript", "-e", script],
+        check=False
+    )
+
+
+
+def open_note(note: dict) -> None:
+    source = note["source"]
+    if source == "apple":
+        open_apple_note(note["id"])
+        return
+    if source == "bear":
+        # url = build_note_url(note)
+        # typer.launch(url)
+        # return
+        pass
+
+
 def export_apple_notes():
     script_path = (
         Path(__file__).resolve()

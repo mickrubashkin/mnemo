@@ -1,3 +1,4 @@
+import subprocess
 import typer
 import questionary
 from typing import List
@@ -8,7 +9,10 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from pathlib import Path
 
 from mnemo.enums import Language, Source
-from mnemo.pipeline import get_notes, get_stats, init_mnemo, rebuild_index, search_notes
+from mnemo.pipeline import get_last_search, get_notes, get_stats, init_mnemo, rebuild_index, search_notes
+from mnemo.sources import open_note
+from mnemo.utils.note_url import build_note_url
+from mnemo.utils.storage import load_pickle
 
 
 app = typer.Typer(no_args_is_help=True)
@@ -187,11 +191,42 @@ def search(query: List[str]):
     query_text = " ".join(query)
     results = search_notes(query_text)
 
-    typer.echo(f"Found {len(results)} notes")
-    for result in results[:10]:
+    print(f"Found {len(results)} notes (show top 10)")
+    for i, result in enumerate(results[:10], 1):
         note = result["note"]
         score = result["score"]
-        typer.echo(f"{score} | {note['title']}")
+        source = note["source"]
+
+        print(f"{i}. {note['title']} | {score}")
+        print(f"[dim]{source} note -> mnemo open {i}[/dim]")
+
+
+
+@app.command()
+def open(index: int):
+    """
+    Open note from the last search
+    """
+    results = get_last_search()
+    if index < 1 or index > len(results):
+        print("Invalid index.")
+        raise typer.Exit(code=1)
+    note = results[index - 1]["note"]
+    if note["source"] == "apple":
+        note_id = note["id"]
+        script = f'''
+        tell application "Notes"
+            activate
+            show note id "{note_id}"
+        end tell
+        '''
+        subprocess.run(
+            ["osascript", "-e", script],
+            check=False
+        )
+    if note["source"] == "bear":
+        url = build_note_url(note)
+        typer.launch(url)
 
 
 

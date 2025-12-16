@@ -18,7 +18,8 @@ def export_all_notes(sources: set[Source]) -> list:
 
         for note in notes:
             note["source"] = source.value
-            note["id"] = f"{source.value}_{note['id']}"
+            # note["id"] = f"{source.value}_{note['id']}"
+            # note["id_original"] = note["id"]
 
         all_notes.extend(notes)
 
@@ -36,6 +37,7 @@ def process_notes(notes: list, languages: set[Language]) -> list:
         )
         processed.append({
             "id": note["id"],
+            # "id_original": note["id_original"],
             "source": note["source"],
             "title": note["title"],
             "body": note["body"],
@@ -106,7 +108,21 @@ def search_notes(query: str):
         languages=config["languages"]
         )
 
+    save_pickle(results, data_dir / "last_search.pkl")
+
     return results
+
+
+
+def get_last_search() -> list:
+    project_root = find_project_root()
+    path = project_root / ".mnemo" / "data" / "last_search.pkl"
+
+    if not path.exists():
+        return []
+
+    return load_pickle(path)
+
 
 
 
@@ -129,12 +145,15 @@ def get_stats():
 
     return stats
 
+
+
 def get_notes():
     project_root = find_project_root()
     data_dir = project_root / ".mnemo" / "data"
     notes = load_pickle(data_dir / "notes.pkl")
 
     return notes
+
 
 
 def init_mnemo(sources: set[Source], languages: set[Language], *, progress=None) -> None:
