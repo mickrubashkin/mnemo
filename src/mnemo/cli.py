@@ -8,7 +8,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from pathlib import Path
 
 from mnemo.enums import Language, Source
-from mnemo.pipeline import get_stats, init_mnemo, rebuild_index, search_notes
+from mnemo.pipeline import get_notes, get_stats, init_mnemo, rebuild_index, search_notes
 
 
 app = typer.Typer(no_args_is_help=True)
@@ -194,6 +194,17 @@ def search(query: List[str]):
         typer.echo(f"{score} | {note['title']}")
 
 
+
+@app.command()
+def list():
+    """
+    Print all notes title
+    """
+    # TODO: think about cap, sort options (by date, by title, ascending, descedning etc)
+    notes = get_notes()
+    titles = [n["title"] for n in notes]
+    for t in titles:
+        print(t)
 
 @app.command()
 def stats():

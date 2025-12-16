@@ -129,6 +129,12 @@ def get_stats():
 
     return stats
 
+def get_notes():
+    project_root = find_project_root()
+    data_dir = project_root / ".mnemo" / "data"
+    notes = load_pickle(data_dir / "notes.pkl")
+
+    return notes
 
 
 def init_mnemo(sources: set[Source], languages: set[Language], *, progress=None) -> None:
