@@ -32,7 +32,7 @@ def make_progress_handler(progress: Progress):
 
         elif event == "export:done":
             progress.remove_task(spinner_tasks["export"])
-            print("[green]:white_check_mark: Exporting notes done[/green]")
+            print(":sparkles: [green]Exporting notes done[/green]")
 
         elif event == "process:start":
             spinner_tasks["process"] = progress.add_task(
@@ -41,7 +41,7 @@ def make_progress_handler(progress: Progress):
 
         elif event == "process:done":
             progress.remove_task(spinner_tasks["process"])
-            print("[green]:white_check_mark:Processing notes done[/green]")
+            print(":sparkles: [green]Processing notes done[/green]")
 
         elif event == "index:start":
             spinner_tasks["index"] = progress.add_task(
@@ -50,27 +50,19 @@ def make_progress_handler(progress: Progress):
 
         elif event == "index:done":
             progress.remove_task(spinner_tasks["index"])
-            print("[green]:white_check_mark:Indexing notes done[/green]")
+            print(":sparkles: [green]Indexing notes done[/green]")
 
     return on_progress
 
 
 
 def print_stats(stats):
-    print("-------------------")
-    print("[bold green]mnemo project stats[/bold green]")
-    print("-------------------")
-    print(f"Path: {stats['project_root']}")
-    print("")
-    print(f"Sources:        {stats['sources']}")
-    print(f"Languages:      {stats['languages']}")
-    print("")
-    print(f"Created:        {stats['created_at']}")
-    print(f"Last indexed:   {stats['last_indexed_at']}")
-    print("")
-    print(f"Notes indexed:  {stats['notes_count']}")
-    print(f"Index tokens:   {stats['unique_tokens']}")
-
+    print("[bold underline green]Project Stats[/bold underline green]\n")
+    print(f"Indexed         {stats['notes_count']} notes")
+    print(f"Note sources    {stats['sources']}")
+    print(f"Note languages  {stats['languages']}")
+    print(f"Unique tokens   {stats['unique_tokens']}")
+    print(f"Project path    {stats['project_root']}")
 
 
 @app.command()
@@ -104,6 +96,9 @@ def init():
 
             on_progress = make_progress_handler(progress)
             rebuild_index(progress=on_progress)
+            print(":party_popper: [green]Revert index successfully built[/green] :party_popper:")
+            stats = get_stats()
+            print_stats(stats)
             raise typer.Exit(code=0)
     if action == "reinit":
         import shutil
@@ -159,8 +154,9 @@ def init():
         on_progress = make_progress_handler(progress)
         init_mnemo(selected_sources, selected_languages, progress=on_progress)
 
-    print("mnemo revert index successfully built :sparkles:")
+    print(":sparkles: [green]Mnemo revert index successfully built[/green]")
     stats = get_stats()
+    print("")
     print_stats(stats)
 
 
@@ -178,8 +174,9 @@ def rebuild():
 
         on_progress = make_progress_handler(progress)
         rebuild_index(progress=on_progress)
-        print("mnemo revert index successfully built :sparkles:")
+        print(":sparkles: [green]Mnemo revert index successfully built[/green]")
         stats = get_stats()
+        print("")
         print_stats(stats)
 
 
