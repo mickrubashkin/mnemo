@@ -6,7 +6,6 @@ from mnemo.enums import Source
 
 
 def export_apple_notes():
-    print("Running apple notes export...")
     script_path = (
         Path(__file__).resolve()
         .parent

@@ -48,7 +48,7 @@ def process_notes(notes: list, languages: set[Language]) -> list:
 
 
 
-def rebuild_index() -> None:
+def rebuild_index(progress=None) -> None:
     project_root = find_project_root()
     config = load_config(project_root)
     mnemo_dir = project_root / ".mnemo"
@@ -60,9 +60,28 @@ def rebuild_index() -> None:
             "Run `mnemo init` first."
         )
 
+    if progress:
+        progress("export:start")
     notes = export_all_notes(config["sources"])
-    processed_notes = process_notes(notes, config["languages"])
+    if progress:
+        progress("export:done")
+
+    if progress:
+        progress("process:start")
+        processed_notes = process_notes(notes, config["languages"])
+    if progress:
+        progress("process:done")
+
+    if progress:
+        progress("index:start")
+    index = build_index(processed_notes)
+
+    if progress:
+        progress("index:done")
     save_pickle(processed_notes, data_dir / "notes.pkl")
+    save_pickle(index, data_dir / "index.pkl")
+
+    # save_config will update last_indexed_at
     save_config(
         project_root,
         sources=config["sources"],
@@ -112,7 +131,7 @@ def get_stats():
 
 
 
-def init_mnemo(sources: set[Source], languages: set[Language]) -> None:
+def init_mnemo(sources: set[Source], languages: set[Language], *, progress=None) -> None:
     mnemo_dir = Path.cwd() / ".mnemo"
 
     if mnemo_dir.exists():
@@ -131,10 +150,23 @@ def init_mnemo(sources: set[Source], languages: set[Language]) -> None:
         languages=languages,
     )
 
+    if progress:
+        progress("export:start")
     notes = export_all_notes(sources)
+    if progress:
+        progress("export:done")
 
+    if progress:
+        progress("process:start")
     processed_notes = process_notes(notes, languages)
-    save_pickle(processed_notes, data_dir / "notes.pkl")
+    if progress:
+        progress("process:done")
 
+    if progress:
+        progress("index:start")
     index = build_index(processed_notes)
+    if progress:
+        progress("index:done")
+
+    save_pickle(processed_notes, data_dir / "notes.pkl")
     save_pickle(index, data_dir / "index.pkl")
