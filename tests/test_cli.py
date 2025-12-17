@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 import pytest
 from typer.testing import CliRunner
 
-from mnemo.cli import app
+from mnemo_cli.cli import app
 
 runner = CliRunner()
 
@@ -17,12 +17,12 @@ def isolate_fs(tmp_path):
 
 @pytest.fixture
 def mock_pipeline():
-    with patch("mnemo.cli.init_mnemo") as m_init, \
-         patch("mnemo.cli.rebuild_index") as m_rebuild, \
-         patch("mnemo.cli.get_stats") as m_stats, \
-         patch("mnemo.cli.get_notes") as m_notes, \
-         patch("mnemo.cli.search_notes") as m_search, \
-         patch("mnemo.cli.get_last_search") as m_last:
+    with patch("mnemo_cli.cli.init_mnemo") as m_init, \
+         patch("mnemo_cli.cli.rebuild_index") as m_rebuild, \
+         patch("mnemo_cli.cli.get_stats") as m_stats, \
+         patch("mnemo_cli.cli.get_notes") as m_notes, \
+         patch("mnemo_cli.cli.search_notes") as m_search, \
+         patch("mnemo_cli.cli.get_last_search") as m_last:
 
         m_stats.return_value = dict(
             notes_count=42,
@@ -54,7 +54,7 @@ def test_help():
 
 
 def test_init_creates_new_index(mock_pipeline):
-    with patch("mnemo.cli.questionary.checkbox") as q_chk:
+    with patch("mnemo_cli.cli.questionary.checkbox") as q_chk:
         q_chk.return_value.ask.side_effect = [["apple"], ["en"]]
 
         result = runner.invoke(app, ["init"])
@@ -65,7 +65,7 @@ def test_init_creates_new_index(mock_pipeline):
 
 def test_init_rebuild_if_dir_exists(mock_pipeline):
     Path(".mnemo").mkdir()
-    with patch("mnemo.cli.questionary.select") as q_sel:
+    with patch("mnemo_cli.cli.questionary.select") as q_sel:
         q_sel.return_value.ask.return_value = "rebuild"
 
         result = runner.invoke(app, ["init"])
@@ -88,7 +88,7 @@ def test_search_command(mock_pipeline):
 
 
 def test_open_apple_note(mock_pipeline):
-    with patch("mnemo.cli.subprocess.run") as sub_run:
+    with patch("mnemo_cli.cli.subprocess.run") as sub_run:
         result = runner.invoke(app, ["open", "1"])
         assert result.exit_code == 0
         sub_run.assert_called_once()
@@ -99,7 +99,7 @@ def test_open_bear_note(mock_pipeline):
     mock_pipeline.last.return_value = [
         {"note": {"title": "bear", "source": "bear", "id": "xyz"}}
     ]
-    with patch("mnemo.cli.typer.launch") as launch:
+    with patch("mnemo_cli.cli.typer.launch") as launch:
         result = runner.invoke(app, ["open", "1"])
         assert result.exit_code == 0
         launch.assert_called_once()

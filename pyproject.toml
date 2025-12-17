@@ -1,5 +1,5 @@
 [project]
-name = "mnemo"
+name = "mnemo-cli"
 version = "0.1.0"
 description = "Local CLI tool for indexing and searching personal notes"
 readme = "README.md"
@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.scripts]
-mnemo = "mnemo.cli:app"
+mnemo = "mnemo_cli.cli:app"
 
 [build-system]
 requires = ["uv_build>=0.9.3,<0.10.0"]

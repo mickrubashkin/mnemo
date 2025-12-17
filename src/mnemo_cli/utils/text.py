@@ -1,7 +1,7 @@
 import re
 import snowballstemmer
 
-from mnemo.enums import Language
+from mnemo_cli.enums import Language
 
 
 

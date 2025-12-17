@@ -1,12 +1,12 @@
 from datetime import datetime
 from pathlib import Path
 
-from mnemo.enums import Language, Source
-from mnemo.sources import SOURCES, export_notes
-from mnemo.utils.config import load_config, save_config
-from mnemo.utils.storage import load_pickle, save_pickle, find_project_root
-from mnemo.utils.text import prepare_for_index
-from mnemo.indexer import build_index, search_index
+from mnemo_cli.enums import Language, Source
+from mnemo_cli.sources import SOURCES, export_notes
+from mnemo_cli.utils.config import load_config, save_config
+from mnemo_cli.utils.storage import load_pickle, save_pickle, find_project_root
+from mnemo_cli.utils.text import prepare_for_index
+from mnemo_cli.indexer import build_index, search_index
 
 
 

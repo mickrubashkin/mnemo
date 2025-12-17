@@ -5,7 +5,7 @@ import sqlite3
 import subprocess
 from pathlib import Path
 
-from mnemo.enums import Source
+from mnemo_cli.enums import Source
 
 
 

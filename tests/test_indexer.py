@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import pytest
 
-from mnemo import indexer
-from mnemo.enums import Language
+from mnemo_cli import indexer
+from mnemo_cli.enums import Language
 
 
 @pytest.fixture
@@ -33,7 +33,7 @@ def test_build_index(notes):
     assert idx["python"]["n2"] == [0]
 
 
-@patch("mnemo.indexer.prepare_for_search")
+@patch("mnemo_cli.indexer.prepare_for_search")
 def test_search_index_empty_query(prep):
     prep.return_value = []
     res = indexer.search_index(
@@ -42,7 +42,7 @@ def test_search_index_empty_query(prep):
     assert res == []
 
 
-@patch("mnemo.indexer.prepare_for_search")
+@patch("mnemo_cli.indexer.prepare_for_search")
 def test_search_index_no_match(prep):
     prep.return_value = ["rust"]
     res = indexer.search_index(
@@ -51,7 +51,7 @@ def test_search_index_no_match(prep):
     assert res == []
 
 
-@patch("mnemo.indexer.prepare_for_search")
+@patch("mnemo_cli.indexer.prepare_for_search")
 def test_search_index_single_token(prep, notes):
     idx = indexer.build_index(notes)
     prep.return_value = ["python"]
@@ -63,7 +63,7 @@ def test_search_index_single_token(prep, notes):
     assert all("python" in r["matched_tokens"] for r in res)
 
 
-@patch("mnemo.indexer.prepare_for_search")
+@patch("mnemo_cli.indexer.prepare_for_search")
 def test_search_index_phrase_bonus(prep, notes):
     idx = indexer.build_index(notes)
     prep.return_value = ["python", "ai"]

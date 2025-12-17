@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from datetime import timezone, datetime
 
-from mnemo.enums import Language, Source
+from mnemo_cli.enums import Language, Source
 
 
 def save_config(

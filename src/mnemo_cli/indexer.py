@@ -1,4 +1,4 @@
-from mnemo.utils.text import prepare_for_search
+from mnemo_cli.utils.text import prepare_for_search
 
 
 def build_index(notes):

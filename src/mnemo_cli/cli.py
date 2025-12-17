@@ -9,9 +9,9 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from pathlib import Path
 
-from mnemo.enums import Language, Source
-from mnemo.pipeline import get_last_search, get_notes, get_stats, init_mnemo, rebuild_index, search_notes
-from mnemo.utils.note_url import build_note_url
+from mnemo_cli.enums import Language, Source
+from mnemo_cli.pipeline import get_last_search, get_notes, get_stats, init_mnemo, rebuild_index, search_notes
+from mnemo_cli.utils.note_url import build_note_url
 
 
 app = typer.Typer(no_args_is_help=True)

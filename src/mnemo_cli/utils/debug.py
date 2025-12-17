@@ -1,4 +1,4 @@
-from mnemo.utils.storage import find_project_root, load_pickle
+from mnemo_cli.utils.storage import find_project_root, load_pickle
 
 
 def get_last_search_note() -> dict:

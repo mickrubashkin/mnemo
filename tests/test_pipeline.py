@@ -5,8 +5,8 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from mnemo import pipeline
-from mnemo.enums import Language, Source
+from mnemo_cli import pipeline
+from mnemo_cli.enums import Language, Source
 
 
 @pytest.fixture(autouse=True)
@@ -39,13 +39,13 @@ def fake_notes():
 
 @pytest.fixture
 def mock_deps():
-    with patch("mnemo.pipeline.export_notes") as m_export, \
-         patch("mnemo.pipeline.build_index") as m_build_idx, \
-         patch("mnemo.pipeline.save_pickle") as m_save, \
-         patch("mnemo.pipeline.load_pickle") as m_load, \
-         patch("mnemo.pipeline.save_config") as m_save_cfg, \
-         patch("mnemo.pipeline.load_config") as m_load_cfg, \
-         patch("mnemo.pipeline.find_project_root") as m_root:
+    with patch("mnemo_cli.pipeline.export_notes") as m_export, \
+         patch("mnemo_cli.pipeline.build_index") as m_build_idx, \
+         patch("mnemo_cli.pipeline.save_pickle") as m_save, \
+         patch("mnemo_cli.pipeline.load_pickle") as m_load, \
+         patch("mnemo_cli.pipeline.save_config") as m_save_cfg, \
+         patch("mnemo_cli.pipeline.load_config") as m_load_cfg, \
+         patch("mnemo_cli.pipeline.find_project_root") as m_root:
 
         m_root.return_value = Path.cwd()
         m_build_idx.return_value = {"fake": "index"}
@@ -126,7 +126,7 @@ def test_search_notes(mock_deps):
         fake_index,
         fake_notes,
     )
-    with patch("mnemo.pipeline.search_index") as m_search:
+    with patch("mnemo_cli.pipeline.search_index") as m_search:
         m_search.return_value = [{"note": {"id": "n1"}, "score": 0.9}]
         results = pipeline.search_notes("query")
 
@@ -136,7 +136,7 @@ def test_search_notes(mock_deps):
 
 
 def test_get_last_search_empty_if_no_file():
-    with patch("mnemo.pipeline.find_project_root", return_value=Path.cwd()):
+    with patch("mnemo_cli.pipeline.find_project_root", return_value=Path.cwd()):
         assert pipeline.get_last_search() == []
 
 

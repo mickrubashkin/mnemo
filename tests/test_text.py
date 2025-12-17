@@ -1,5 +1,5 @@
-from mnemo.utils import text
-from mnemo.enums import Language
+from mnemo_cli.utils import text
+from mnemo_cli.enums import Language
 
 
 def test_normalize_text():
