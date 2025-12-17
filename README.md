@@ -1,14 +1,12 @@
-# mnemo - Local Notes Indexer
+# mnemo | Local Notes Indexer
 
-mnemo is a local CLI tool for indexing and searching personal notes.
+`mnemo` is a local CLI tool for indexing and searching personal notes.
 
 It builds a searchable index of your notes and lets you quickly find and open relevant entries from the terminal.
 
 Everything works locally.
 
----
-
-## Why mnemo
+### Why mnemo
 
 I keep notes in multiple apps over many years. Searching them efficiently became harder than writing new ones.
 
@@ -16,14 +14,12 @@ mnemo is a small CLI tool that solves this problem locally and predictab.
 
 It works just fine for me.
 
-## Supported sources
+### Supported sources
 
 - Apple Notes
 - Bear (macOS)
 
----
-
-## Installation
+### Installation
 
 Run without installation (via uv):
 
@@ -37,9 +33,7 @@ Install as a CLI tool:
 uv tool install mnemo
 ```
 
----
-
-## Usage
+### Usage
 
 Initialize a project and build the index:
 
@@ -65,25 +59,19 @@ Rebuild the index:
 mnemo rebuild
 ```
 
----
-
-## Notes
+### Notes
 
 - Index is stored locally in the project directory (`.mnemo`)
 - Designed for personal knowledge bases
 - Optimized for fast iteration and extensibility
 
----
-
-## Status
+### Status
 
 Early-stage MVP.
-Actively developed.
 
----
-
-## Possible next steps
+### Possible next steps
 
 - Improved search ranking
-- Notion support
-- Google Docs support
+- Improved result snippets with highlighted matches
+- Additional note sources (Notion, Google Docs)
+- Indexing local folders (`txt`, `md`)
