@@ -15,6 +15,11 @@ from mnemo.utils.note_url import build_note_url
 
 app = typer.Typer(no_args_is_help=True)
 
+SOURCE_STYLES = {
+    "apple": "yellow",
+    "bear": "red",
+}
+
 @app.callback()
 def root():
     """
@@ -184,19 +189,33 @@ def rebuild():
 
 
 @app.command()
-def search(query: List[str]):
+def search(
+    query: List[str],
+    limit: int = typer.Option(
+        5, "--limit", "-l", help="Maximum number of search results to show"
+    ),
+    show_score: bool = typer.Option(
+        True,
+        "--score/--no-score",
+        help="Show relevance score in search results"
+    )
+    ):
     """Search notes by query."""
     query_text = " ".join(query)
     results = search_notes(query_text)
 
-    print(f"Found {len(results)} notes (show top 10)")
-    for i, result in enumerate(results[:10], 1):
+    print(f"Found {len(results)} notes (show top {limit})")
+    for i, result in enumerate(results[:limit], 1):
         note = result["note"]
         score = result["score"]
         source = note["source"]
+        style = SOURCE_STYLES.get(source, "white")
 
-        print(f"{i}. {note['title']} | {score}")
-        print(f"[dim]{source} note -> mnemo open {i}[/dim]")
+        if show_score:
+            print(f"{i}. {note['title']} | score: {score}")
+        else:
+            print(f"{i}. {note['title']}")
+        print(f"[dim][{style}]{source} note -> mnemo open {i}[/dim]")
 
 
 

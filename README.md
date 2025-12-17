@@ -8,6 +8,14 @@ Everything works locally.
 
 ---
 
+## Why mnemo
+
+I keep notes in multiple apps over many years. Searching them efficiently became harder than writing new ones.
+
+mnemo is a small CLI tool that solves this problem locally and predictab.
+
+It works just fine for me.
+
 ## Supported sources
 
 - Apple Notes
@@ -71,3 +79,11 @@ mnemo rebuild
 
 Early-stage MVP.
 Actively developed.
+
+---
+
+## Possible next steps
+
+- Improved search ranking
+- Notion support
+- Google Docs support

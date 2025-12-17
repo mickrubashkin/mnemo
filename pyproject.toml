@@ -1,17 +1,32 @@
 [project]
 name = "mnemo"
 version = "0.1.0"
-description = "Add your description here"
+description = "Local CLI tool for indexing and searching personal notes"
 readme = "README.md"
 authors = [
-    { name = "Mick Ruabshkin", email = "mikhail.rubashkin@gmail.com" }
+    { name = "Mick Rubashkin", email = "mikhail.rubashkin@gmail.com" }
 ]
-requires-python = ">=3.13"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: MacOS",
+]
+
+requires-python = ">=3.11"
 dependencies = [
-    "pytest>=9.0.2",
     "questionary>=2.1.1",
     "snowballstemmer>=3.0.1",
     "typer>=0.20.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/mickrubashkin/mnemo"
+Repository = "https://github.com/mickrubashkin/mnemo"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.2",
 ]
 
 [project.scripts]
