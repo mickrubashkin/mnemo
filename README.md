@@ -6,6 +6,10 @@ It builds a searchable index of your notes and lets you quickly find and open re
 
 Everything works locally.
 
+▶ Demo: Searching and opening notes from an existing index. Rebuilding index.
+
+[![asciicast](https://asciinema.org/a/NsFhxJCygpGNCSjMriWG8n76n.svg)](https://asciinema.org/a/NsFhxJCygpGNCSjMriWG8n76n)
+
 ### Why mnemo
 
 I keep notes in multiple apps over many years. Searching them efficiently became harder than writing new ones.
@@ -24,13 +28,14 @@ It works just fine for me.
 Run without installation (via uv):
 
 ```bash
-uvx mnemo
+uvx --from mnemo-cli mnemo --help
 ```
 
 Install as a CLI tool:
 
 ```bash
-uv tool install mnemo
+uv tool install mnemo-cli
+mnemo --help
 ```
 
 ### Usage

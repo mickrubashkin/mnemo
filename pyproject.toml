@@ -1,6 +1,6 @@
 [project]
 name = "mnemo-cli"
-version = "0.1.0"
+version = "0.1.2"
 description = "Local CLI tool for indexing and searching personal notes"
 readme = "README.md"
 authors = [

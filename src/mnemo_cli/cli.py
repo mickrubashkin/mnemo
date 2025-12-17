@@ -12,6 +12,7 @@ from pathlib import Path
 from mnemo_cli.enums import Language, Source
 from mnemo_cli.pipeline import get_last_search, get_notes, get_stats, init_mnemo, rebuild_index, search_notes
 from mnemo_cli.utils.note_url import build_note_url
+from mnemo_cli.utils.storage import find_project_root
 
 
 app = typer.Typer(no_args_is_help=True)
@@ -27,6 +28,16 @@ def root():
     mnemo - work with notes index
     """
     pass
+
+
+
+def ensure_initialized():
+    try:
+        find_project_root()
+    except RuntimeError:
+        print("[red]mnemo project not initialized[/red]")
+        print("Run [bold]mnemo init[/bold] first")
+        raise typer.Exit(code=1)
 
 
 def make_progress_handler(progress: Progress):
@@ -192,6 +203,7 @@ def rebuild():
     """
     Rebuild search index using existing mnemo configuration.
     """
+    ensure_initialized()
     with Progress(
         SpinnerColumn(),
         TextColumn("{task.description}"),
@@ -225,6 +237,7 @@ def search(
     )
     ):
     """Search notes by query."""
+    ensure_initialized()
     query_text = " ".join(query)
     results = search_notes(query_text)
 
@@ -253,6 +266,7 @@ def open(index: int):
     """
     Open note from the last search
     """
+    ensure_initialized()
     results = get_last_search()
     if index < 1 or index > len(results):
         print("Invalid index.")
@@ -286,6 +300,7 @@ def list():
     Print all notes title
     """
     # TODO: think about cap, sort options (by date, by title, ascending, descedning etc)
+    ensure_initialized()
     notes = get_notes()
     titles = [n["title"] for n in notes]
     for t in titles:
@@ -294,5 +309,6 @@ def list():
 @app.command()
 def stats():
     """Print notes index stats."""
+    ensure_initialized()
     stats = get_stats()
     print_stats(stats)
