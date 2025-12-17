@@ -18,8 +18,6 @@ def export_all_notes(sources: set[Source]) -> list:
 
         for note in notes:
             note["source"] = source.value
-            # note["id"] = f"{source.value}_{note['id']}"
-            # note["id_original"] = note["id"]
 
         all_notes.extend(notes)
 
@@ -37,7 +35,6 @@ def process_notes(notes: list, languages: set[Language]) -> list:
         )
         processed.append({
             "id": note["id"],
-            # "id_original": note["id_original"],
             "source": note["source"],
             "title": note["title"],
             "body": note["body"],
@@ -64,22 +61,28 @@ def rebuild_index(progress=None) -> None:
 
     if progress:
         progress("export:start")
+
     notes = export_all_notes(config["sources"])
+
     if progress:
         progress("export:done")
 
     if progress:
         progress("process:start")
-        processed_notes = process_notes(notes, config["languages"])
+
+    processed_notes = process_notes(notes, config["languages"])
+
     if progress:
         progress("process:done")
 
     if progress:
         progress("index:start")
+
     index = build_index(processed_notes)
 
     if progress:
         progress("index:done")
+
     save_pickle(processed_notes, data_dir / "notes.pkl")
     save_pickle(index, data_dir / "index.pkl")
 
@@ -177,19 +180,25 @@ def init_mnemo(sources: set[Source], languages: set[Language], *, progress=None)
 
     if progress:
         progress("export:start")
+
     notes = export_all_notes(sources)
+
     if progress:
         progress("export:done")
 
     if progress:
         progress("process:start")
+
     processed_notes = process_notes(notes, languages)
+
     if progress:
         progress("process:done")
 
     if progress:
         progress("index:start")
+
     index = build_index(processed_notes)
+
     if progress:
         progress("index:done")
 

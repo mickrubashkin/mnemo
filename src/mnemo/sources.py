@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
 import json
+import os
+import sqlite3
 import subprocess
 from pathlib import Path
 
@@ -58,7 +61,43 @@ def export_apple_notes():
 
 
 def export_bear_notes():
+    db_path = os.path.expanduser(
+        '~/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite'
+    )
+
+    if not os.path.exists(db_path):
+        print("Ber db not found")
+        return []
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT ZUNIQUEIDENTIFIER, ZTITLE, ZTEXT, ZCREATIONDATE, ZMODIFICATIONDATE
+        FROM ZSFNOTE
+        WHERE ZTRASHED = 0
+        ORDER BY ZMODIFICATIONDATE DESC
+    """)
+
+    bear_notes = cursor.fetchall()
+    conn.close()
+
     notes = []
+    for note in bear_notes:
+        uid, title, body, created_timestamp, modified_timestamp = note
+        created = datetime(2001, 1, 1) + timedelta(seconds=created_timestamp)
+        created_string = created.strftime("%Y-%m-%d %H:%M:%S")
+        modified = datetime(2001, 1, 1) + timedelta(seconds=modified_timestamp)
+        modified_string = modified.strftime("%Y-%m-%d %H:%M:%S")
+
+        notes.append({
+            "id": uid,
+            "title": title,
+            "body": body,
+            "created": created_string,
+            "modified": modified_string
+        })
+
     return notes
 
 

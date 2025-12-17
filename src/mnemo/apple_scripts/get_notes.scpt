@@ -19,7 +19,7 @@ on searchReplace(theText, searchString, replaceString)
 end searchReplace
 
 on formatDate(theDate)
-    -- Форматируем дату в ISO 8601 формат: YYYY-MM-DD HH:MM:SS
+    -- Format date to ISO 8601: YYYY-MM-DD HH:MM:SS
     set y to year of theDate as string
     set m to (month of theDate as integer) as string
     if length of m is 1 then set m to "0" & m
@@ -49,11 +49,11 @@ tell application "Notes"
         set titleText to (name of n) as text
         set bodyText to plaintext of n
 
-        -- Метаданные
+        -- Metadata
         set createdDate to my formatDate(creation date of n)
         set modifiedDate to my formatDate(modification date of n)
 
-        -- Папка/аккаунт
+        -- Folder/account
         try
             set folderName to (name of container of n) as text
         on error

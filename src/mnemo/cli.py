@@ -10,9 +10,7 @@ from pathlib import Path
 
 from mnemo.enums import Language, Source
 from mnemo.pipeline import get_last_search, get_notes, get_stats, init_mnemo, rebuild_index, search_notes
-from mnemo.sources import open_note
 from mnemo.utils.note_url import build_note_url
-from mnemo.utils.storage import load_pickle
 
 
 app = typer.Typer(no_args_is_help=True)
@@ -88,7 +86,7 @@ def init():
             ],
         ).ask()
 
-    if action is None or action == "cancel":
+    if action == "cancel":
         typer.echo("Cancelled.")
         raise typer.Exit(code=0)
     if action == "rebuild":
@@ -100,7 +98,7 @@ def init():
 
             on_progress = make_progress_handler(progress)
             rebuild_index(progress=on_progress)
-            print(":party_popper: [green]Revert index successfully built[/green] :party_popper:")
+            print(":sparkles: [green]Mnemo index successfully built[/green]")
             stats = get_stats()
             print_stats(stats)
             raise typer.Exit(code=0)
@@ -158,7 +156,7 @@ def init():
         on_progress = make_progress_handler(progress)
         init_mnemo(selected_sources, selected_languages, progress=on_progress)
 
-    print(":sparkles: [green]Mnemo revert index successfully built[/green]")
+    print(":sparkles: [green]Mnemo index successfully built[/green]")
     stats = get_stats()
     print("")
     print_stats(stats)
@@ -211,7 +209,9 @@ def open(index: int):
     if index < 1 or index > len(results):
         print("Invalid index.")
         raise typer.Exit(code=1)
+
     note = results[index - 1]["note"]
+
     if note["source"] == "apple":
         note_id = note["id"]
         script = f'''
@@ -224,9 +224,11 @@ def open(index: int):
             ["osascript", "-e", script],
             check=False
         )
-    if note["source"] == "bear":
+    elif note["source"] == "bear":
         url = build_note_url(note)
         typer.launch(url)
+    else:
+        print("Unsupported note source")
 
 
 
