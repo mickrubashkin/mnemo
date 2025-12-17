@@ -1,3 +1,4 @@
+import re
 import subprocess
 import typer
 import questionary
@@ -71,6 +72,24 @@ def print_stats(stats):
     print(f"Unique tokens   {stats['unique_tokens']}")
     print(f"Project path    {stats['project_root']}")
 
+
+def make_snippet(text, query, window=40):
+    idx = text.lower().find(query.lower())
+    if idx == -1:
+        return None
+
+    start = max(0, idx - window)
+    end = min(len(text), idx + len(query) + window)
+
+    snippet = text[start:end]
+    highlighted = re.sub(
+        re.escape(query),
+        r"[bold yellow]\g<0>[/bold yellow]",
+        snippet,
+        flags=re.IGNORECASE
+    )
+
+    return f"...{highlighted}..."
 
 @app.command()
 def init():
@@ -198,6 +217,11 @@ def search(
         True,
         "--score/--no-score",
         help="Show relevance score in search results"
+    ),
+    show_snippet: bool = typer.Option(
+        False,
+        "--snippet/--no-snippet",
+        help="Show snippet with search query in note text"
     )
     ):
     """Search notes by query."""
@@ -209,6 +233,9 @@ def search(
         note = result["note"]
         score = result["score"]
         source = note["source"]
+        snippet = None
+        if show_snippet:
+            snippet = make_snippet(note["body"], query_text)
         style = SOURCE_STYLES.get(source, "white")
 
         if show_score:
@@ -216,6 +243,8 @@ def search(
         else:
             print(f"{i}. {note['title']}")
         print(f"[dim][{style}]{source} note -> mnemo open {i}[/dim]")
+        if snippet:
+            print(f"    {snippet}")
 
 
 
